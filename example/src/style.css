@@ -51,6 +51,8 @@ button {
   margin: 0;
   list-style: none;
   overflow: hidden;
+  border: 2px solid #19323c;
+  border-radius: 50%;
 }
 
 .container li {
@@ -64,7 +66,6 @@ button {
   width: 50%;
   height: 50%;
   border-radius: 50%;
-  background-color: #19323c;
 }
 
 .container li:nth-child(13):before {

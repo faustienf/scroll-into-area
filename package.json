@@ -1,16 +1,23 @@
 {
   "name": "scroll-into-area",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {},
   "scripts": {
-    "start": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "typescript": "^4.9.3",
-    "vite": "^4.0.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faustienf/scroll-into-area.git"
   },
-  "prettier": {}
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/faustienf/scroll-into-area/issues"
+  },
+  "homepage": "https://github.com/faustienf/scroll-into-area#readme",
+  "dependencies": {
+    "easing-scroll": "^1.0.0"
+  }
 }

@@ -1,8 +1,9 @@
-type Position = "start" | "end" | "center";
+import { easingScroll } from "easing-scroll";
+
+export type Position = "start" | "end" | "center";
 
 type Options = {
   container: Element;
-  target: Element;
   x?: Position;
   y?: Position;
 };
@@ -35,7 +36,10 @@ const getCenterScroll = (
   return containerScroll + offset + targetSize / 2;
 };
 
-export const scrollIntoArea = ({ container, target, x, y }: Options) => {
+export const scrollIntoArea = <E extends Element>(
+  target: E,
+  { container, x, y }: Options
+) => {
   const containerRect = container.getBoundingClientRect();
   const targetRect = target.getBoundingClientRect();
 
@@ -104,5 +108,5 @@ export const scrollIntoArea = ({ container, target, x, y }: Options) => {
     }
   }
 
-  container.scrollTo({ top, left });
+  return easingScroll(container, { top, left, duration: 400 });
 };
