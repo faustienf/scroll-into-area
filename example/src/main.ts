@@ -47,7 +47,7 @@ document.getElementById("app")!.addEventListener("mouseover", (e) => {
       y,
       duration: 400, // ms
       // 👀 https://easings.net/#easeOutCubic
-      easing: (x) => 1 - Math.pow(1 - x, 3),
+      easing: (x: number): number => 1 - Math.pow(1 - x, 3),
     });
   }
 });
