@@ -1,112 +1,100 @@
 import { easingScroll } from "easing-scroll";
 
+type Px = number;
+/**
+ * Percent is number 0 - 1
+ *
+ * 0 = 0%, 1 = 100%
+ */
+type Pct = number;
 export type Position = "start" | "end" | "center";
+
+/**
+ * @see https://github.com/faustienf/easing-scroll
+ */
+type EasingScrollOptions = Omit<
+  Parameters<typeof easingScroll>[1],
+  "top" | "left"
+>;
 
 type Options = {
   container: Element;
   x?: Position;
   y?: Position;
+  duration?: EasingScrollOptions["duration"]; // ms
+  easing?: EasingScrollOptions["easing"]; // (t: Pct) => Pct
+  signal?: EasingScrollOptions["signal"]; // AbortSignal
 };
 
-const getStartScroll = (
-  containerScroll: number,
-  containerOffset: number,
-  targetOffset: number
-): number => containerScroll - containerOffset + targetOffset;
+type Properties = {
+  containerScroll: Px;
+  containerOffset: Px;
+  containerSize: Px;
+  targetOffset: Px;
+  targetSize: Px;
+};
 
-const getEndScroll = (
-  containerScroll: number,
-  containerOffset: number,
-  containerSize: number,
-  targetOffset: number,
-  targetSize: number
-) => {
+const getStartScroll = ({
+  containerScroll,
+  containerOffset,
+  targetOffset,
+}: Omit<Properties, "targetSize" | "containerSize">): Px =>
+  containerScroll - containerOffset + targetOffset;
+
+const getEndScroll = ({
+  containerScroll,
+  containerOffset,
+  containerSize,
+  targetOffset,
+  targetSize,
+}: Properties): Px => {
   const offset = targetOffset - containerOffset - containerSize;
   return containerScroll + offset + targetSize;
 };
 
-const getCenterScroll = (
-  containerScroll: number,
-  containerOffset: number,
-  containerSize: number,
-  targetOffset: number,
-  targetSize: number
-) => {
+const getCenterScroll = ({
+  containerScroll,
+  containerOffset,
+  containerSize,
+  targetOffset,
+  targetSize,
+}: Properties): Px => {
   const offset = targetOffset - containerOffset - containerSize / 2;
   return containerScroll + offset + targetSize / 2;
 };
 
+const positionScroll = {
+  start: getStartScroll,
+  center: getCenterScroll,
+  end: getEndScroll,
+} as const;
+
 export const scrollIntoArea = <E extends Element>(
   target: E,
-  { container, x, y }: Options
-) => {
+  { container, x, y, ...rest }: Options
+): Promise<Pct> => {
   const containerRect = container.getBoundingClientRect();
   const targetRect = target.getBoundingClientRect();
 
-  let top: number | undefined;
-  let left: number | undefined;
+  const top =
+    y &&
+    positionScroll[y]({
+      containerOffset: containerRect.top,
+      containerScroll: container.scrollTop,
+      containerSize: containerRect.height,
+      targetOffset: targetRect.top,
+      targetSize: targetRect.height,
+    });
 
-  switch (x) {
-    case "start": {
-      left = getStartScroll(
-        container.scrollLeft,
-        containerRect.left,
-        targetRect.left
-      );
-      break;
-    }
-    case "end": {
-      left = getEndScroll(
-        container.scrollLeft,
-        containerRect.left,
-        containerRect.width,
-        targetRect.left,
-        targetRect.width
-      );
-      break;
-    }
-    case "center": {
-      left = getCenterScroll(
-        container.scrollLeft,
-        containerRect.left,
-        containerRect.width,
-        targetRect.left,
-        targetRect.width
-      );
-      break;
-    }
-  }
+  const left =
+    x &&
+    positionScroll[x]({
+      containerOffset: containerRect.left,
+      containerScroll: container.scrollLeft,
+      containerSize: containerRect.width,
+      targetOffset: targetRect.left,
+      targetSize: targetRect.width,
+    });
 
-  switch (y) {
-    case "start": {
-      top = getStartScroll(
-        container.scrollTop,
-        containerRect.top,
-        targetRect.top
-      );
-      break;
-    }
-    case "end": {
-      top = getEndScroll(
-        container.scrollTop,
-        containerRect.top,
-        containerRect.height,
-        targetRect.top,
-        targetRect.height
-      );
-      break;
-    }
-    case "center": {
-      top = getCenterScroll(
-        container.scrollTop,
-        containerRect.top,
-        containerRect.height,
-        targetRect.top,
-        targetRect.height
-      );
-      break;
-    }
-  }
-
-  return easingScroll(container, { top, left, duration: 400 });
+  return easingScroll(container, { top, left, ...rest });
 };
