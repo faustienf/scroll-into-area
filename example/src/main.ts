@@ -1,6 +1,5 @@
-import "./style.css";
-
 import { Position, scrollIntoArea } from "../../src/scroll-into-area";
+import "./style.css";
 
 const rows = Array(5)
   .fill(
