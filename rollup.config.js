@@ -1,12 +1,14 @@
 import path from "path";
 import typescript from "rollup-plugin-typescript2";
 import esbuild from "rollup-plugin-esbuild";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 const plugins = ({ target } = {}) => {
   return [
     typescript({
       tsconfigOverride: { declaration: true },
     }),
+    nodeResolve(),
     esbuild({
       minify: true,
       target,
@@ -17,7 +19,6 @@ const plugins = ({ target } = {}) => {
 const entry = (input) => {
   const { dir, name } = path.parse(input);
   const filename = `${dir}/${name}`;
-  console.log(filename);
   return [
     {
       input: `src/${input}`,
@@ -38,4 +39,4 @@ const entry = (input) => {
   ];
 };
 
-export default [...entry("index.ts"), ...entry("easing-scroll.ts")];
+export default [...entry("index.ts"), ...entry("scroll-into-area.ts")];

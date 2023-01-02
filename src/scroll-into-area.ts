@@ -7,23 +7,19 @@ type Px = number;
  * 0 = 0%, 1 = 100%
  */
 type Pct = number;
+type Ms = number;
 export type Position = "start" | "end" | "center";
-
-/**
- * @see https://github.com/faustienf/easing-scroll
- */
-type EasingScrollOptions = Omit<
-  Parameters<typeof easingScroll>[1],
-  "top" | "left"
->;
 
 type Options = {
   container: Element;
   x?: Position;
   y?: Position;
-  duration?: EasingScrollOptions["duration"]; // ms
-  easing?: EasingScrollOptions["easing"]; // (t: Pct) => Pct
-  signal?: EasingScrollOptions["signal"]; // AbortSignal
+  duration?: Ms;
+  /**
+   * @see https://easings.net
+   */
+  easing?: (progess: Pct) => Pct;
+  signal?: AbortSignal;
 };
 
 type Properties = {
