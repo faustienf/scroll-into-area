@@ -19,10 +19,15 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <button type="button" class="position" data-position="end-start"></button>
   <button type="button" class="position" data-position="start-center"></button>
   <div class="cat">
-    <span class="cat-ears"></span>
+    <ul class="cat-ears">
+      <li></li> 
+      <li></li>
+      <li></li>
+    </ul>
     <ul class="cat-head">
       ${rows} 
     </ul>
+    <span class="cat-tail"></span>
   </div>
   <button type="button" class="position" data-position="end-center"></button>
   <button type="button" class="position" data-position="start-end"></button>
@@ -30,8 +35,10 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <button type="button" class="position" data-position="end-end"></button>
 `;
 
+const eats = document.querySelector(".cat-ears")!;
+const eatsTarget = eats.querySelector("li:nth-child(2)")!;
 const container = document.querySelector(".cat-head")!;
-const target = document.querySelector(".cat-head > li:nth-child(13)")!;
+const target = container.querySelector("li:nth-child(13)")!;
 
 document.getElementById("app")!.addEventListener("mouseover", (e) => {
   if (e.target instanceof HTMLButtonElement) {
@@ -39,6 +46,15 @@ document.getElementById("app")!.addEventListener("mouseover", (e) => {
       Position,
       Position
     ];
+
+    scrollIntoArea(eatsTarget, {
+      container: eats,
+      x,
+      y: "start",
+      duration: 600, // ms
+      // 👀 https://easings.net/#easeOutCubic
+      easing: (x: number): number => 1 - Math.pow(1 - x, 3),
+    });
 
     scrollIntoArea(target, {
       container,
