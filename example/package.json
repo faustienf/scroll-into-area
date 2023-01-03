@@ -6,7 +6,7 @@
   "scripts": {
     "start": "vite",
     "link": "pnpm link ../ && pnpm link scroll-into-area",
-    "build": "pnpm run link && tsc && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
