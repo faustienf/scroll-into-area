@@ -8,6 +8,7 @@ specifiers:
   '@vitejs/plugin-react-swc': 3.0.1
   react: 18.2.0
   react-dom: 18.2.0
+  scroll-into-area: ^1.0.0
   typescript: 4.9.4
   vite: 4.0.3
 
@@ -16,6 +17,7 @@ dependencies:
   '@codesandbox/sandpack-themes': 1.17.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  scroll-into-area: 1.0.0
 
 devDependencies:
   '@types/react': 18.0.26
@@ -687,6 +689,10 @@ packages:
       type: 1.2.0
     dev: false
 
+  /easing-scroll/1.0.0:
+    resolution: {integrity: sha512-YgdLpswn1fOIeCFJy8oq0C8oj6iGfxiWnY/KxtuJWhezYw+k4DgPihGVifrPE7cuJgWVXRBbQlcWJpPr0pPgGg==}
+    dev: false
+
   /editions/1.3.4:
     resolution: {integrity: sha512-gzao+mxnYDzIysXKMQi/+M1mjy/rjestjg6OPoYTtI+3Izp23oiGZitsl9lPDPiTGXbcSIk1iJWhliSaglxnUg==}
     engines: {node: '>=0.8'}
@@ -886,6 +892,12 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
+
+  /scroll-into-area/1.0.0:
+    resolution: {integrity: sha512-dBeuctFunQrR2U8hyJqfoXrbIg/wFsz7+h3GtMSrpq9597VyHgCf9pzoeM1MBozLB1v9eP6BzfLbuvv0d0spag==}
+    dependencies:
+      easing-scroll: 1.0.0
     dev: false
 
   /source-map-js/1.0.2:
