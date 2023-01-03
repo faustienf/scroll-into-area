@@ -1,7 +1,17 @@
 {
   "name": "scroll-into-area",
   "version": "1.0.0",
-  "description": "",
+  "description": "♿️ Smooth scrolling an element into view of container",
+  "keywords": [
+    "scroll into view",
+    "scrollIntoView",
+    "smooth scroll",
+    "scroll parents",
+    "scroll",
+    "smooth",
+    "smooth-scroll",
+    "easing"
+  ],
   "type": "module",
   "source": "src/index.ts",
   "main": "dist/index.js",
@@ -21,13 +31,14 @@
   },
   "scripts": {
     "clean": "rm -r dist/*",
-    "build": "tsc && pnpm run clean && rollup -c"
+    "build": "tsc && pnpm run clean && rollup -c",
+    "release": "pnpm build && npm publish"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/faustienf/scroll-into-area.git"
   },
-  "author": "",
+  "author": "@faustien",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/faustienf/scroll-into-area/issues"
