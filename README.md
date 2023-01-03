@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/faustienf/scroll-into-area/main/assets/cat.png">
+  <img src="https://raw.githubusercontent.com/faustienf/scroll-into-area/main/assets/cat.png" width="200">
 </p>
 
 # scroll-into-area
 
 [![npm-version](https://img.shields.io/npm/v/scroll-into-area.svg)](https://npmjs.org/package/scroll-into-area)
 
-♿️ Smooth scrolling into view. [Demo](https://scroll-into-area.vercel.app).
+♿️ Smooth scrolling an element into view. [Demo](https://scroll-into-area.vercel.app).
 
 ## Install
 
