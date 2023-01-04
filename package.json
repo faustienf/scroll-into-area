@@ -1,6 +1,6 @@
 {
   "name": "scroll-into-area",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "♿️ Smooth scrolling an element into view of container",
   "keywords": [
     "scroll into view",
