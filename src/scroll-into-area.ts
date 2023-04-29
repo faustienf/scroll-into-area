@@ -11,7 +11,7 @@ type Ms = number;
 export type Position = "start" | "end" | "center";
 
 type Options = {
-  container: Element;
+  container: HTMLElement;
   x?: Position;
   y?: Position;
   duration?: Ms;
