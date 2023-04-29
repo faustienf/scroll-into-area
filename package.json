@@ -32,7 +32,9 @@
   "scripts": {
     "clean": "rm -r dist/*",
     "build": "tsc && pnpm run clean && rollup -c",
-    "release": "pnpm build && npm publish"
+    "release:patch": "pnpm version patch",
+    "preversion": "pnpm run build",
+    "postversion": "git add . && git push && git push --tags && pnpm publish"
   },
   "repository": {
     "type": "git",
@@ -45,7 +47,7 @@
   },
   "homepage": "https://github.com/faustienf/scroll-into-area#readme",
   "dependencies": {
-    "easing-scroll": "^1.0.0"
+    "easing-scroll": "^1.0.3"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "15.0.1",

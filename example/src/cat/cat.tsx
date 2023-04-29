@@ -1,5 +1,5 @@
 import { useRef, useEffect, Fragment, PointerEvent } from "react";
-import { Position, scrollIntoArea } from "scroll-into-area";
+import { Position, scrollIntoArea } from "../../../src";
 
 import "./cat.css";
 
