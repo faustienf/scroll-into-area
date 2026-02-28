@@ -1,0 +1,31 @@
+export const sandpackTheme = {
+  colors: {
+    surface1: "rgba(255,255,255,0.45)",
+    surface2: "rgba(255,255,255,0.3)",
+    surface3: "rgba(240,240,255,0.4)",
+    clickable: "#6b7280",
+    base: "#374151",
+    disabled: "#9ca3af",
+    hover: "#4b5563",
+    accent: "#7c3aed",
+    error: "#ef4444",
+    errorSurface: "#fef2f2",
+  },
+  syntax: {
+    plain: "#374151",
+    comment: { color: "#9ca3af", fontStyle: "italic" as const },
+    keyword: "#7c3aed",
+    tag: "#059669",
+    punctuation: "#6b7280",
+    definition: "#2563eb",
+    property: "#d97706",
+    static: "#dc2626",
+    string: "#059669",
+  },
+  font: {
+    body: 'system-ui, -apple-system, "Segoe UI", sans-serif',
+    mono: '"SF Mono", "Fira Code", "Cascadia Code", monospace',
+    size: "13px",
+    lineHeight: "1.6",
+  },
+};

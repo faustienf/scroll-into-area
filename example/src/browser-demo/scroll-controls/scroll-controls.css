@@ -1,0 +1,68 @@
+/* ── Scroll controls ── */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 540px;
+  position: relative;
+  z-index: 2;
+}
+
+.control-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.action-btn {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s,
+    opacity 0.2s;
+  user-select: none;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-scroll {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.25);
+}
+
+.action-scroll:hover:not(:disabled) {
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+}
+
+.action-reset {
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #555;
+}
+
+.action-reset:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 480px) {
+  .action-btn {
+    padding: 7px 14px;
+    font-size: 12px;
+    flex: 1;
+    text-align: center;
+  }
+}

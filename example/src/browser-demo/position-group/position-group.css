@@ -1,0 +1,60 @@
+/* ── Position group ── */
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.control-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  min-width: 16px;
+  text-align: right;
+  font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #444;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+  user-select: none;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.control-btn.active {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.3);
+}
+
+@media (max-width: 480px) {
+  .control-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,62 @@
+/* ── Browser titlebar ── */
+.browser-titlebar {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.35);
+  border-bottom: 1px solid var(--glass-border);
+  gap: 12px;
+}
+
+.browser-dots {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.browser-dots-spacer {
+  width: 48px;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.dot-close {
+  background: #ff6059;
+}
+
+.dot-minimize {
+  background: #ffbd2e;
+}
+
+.dot-maximize {
+  background: #28c840;
+}
+
+.browser-address {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.browser-url {
+  font-size: 12px;
+  color: #666;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+@media (max-width: 480px) {
+  .browser-dots-spacer {
+    display: none;
+  }
+}

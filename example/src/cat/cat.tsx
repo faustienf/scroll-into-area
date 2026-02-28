@@ -1,5 +1,6 @@
 import { useRef, useEffect, Fragment, PointerEvent } from "react";
 import { Position, scrollIntoArea } from "scroll-into-area";
+import { easeOutCubic } from "../shared/utils";
 
 import "./cat.css";
 
@@ -33,8 +34,7 @@ export const Cat = () => {
       x,
       y: "start",
       duration: 600, // ms
-      // 👀 https://easings.net/#easeOutCubic
-      easing: (x: number): number => 1 - Math.pow(1 - x, 3),
+      easing: easeOutCubic,
     });
 
     scrollIntoArea(eyesRef.current, {
@@ -42,8 +42,7 @@ export const Cat = () => {
       x,
       y,
       duration: 400, // ms
-      // 👀 https://easings.net/#easeOutCubic
-      easing: (x: number): number => 1 - Math.pow(1 - x, 3),
+      easing: easeOutCubic,
     });
   };
 

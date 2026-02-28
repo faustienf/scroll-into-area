@@ -1,0 +1,37 @@
+/* ── Code section ── */
+.code-section {
+  width: 100%;
+}
+
+.code-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+}
+
+.code-card-header {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.code-card .sp-wrapper {
+  border-radius: 0 !important;
+}
+
+.code {
+  height: 540px;
+}
+
+@media (max-width: 640px) {
+  .code {
+    height: 340px;
+  }
+}
