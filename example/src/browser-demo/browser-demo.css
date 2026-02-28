@@ -6,6 +6,7 @@
   gap: 24px;
   width: 100%;
   max-width: 560px;
+  position: relative;
 }
 
 .browser-window {
@@ -17,6 +18,41 @@
   border-radius: 14px;
   box-shadow: var(--glass-shadow);
   overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Ghost target (visible outside viewport) ── */
+.target-ghost {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.25);
+  filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.25s ease;
+  user-select: none;
+}
+
+.target-ghost .target-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.target-ghost .target-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
 }
 
 /* ── Title bar ── */
@@ -167,6 +203,8 @@
   gap: 12px;
   width: 100%;
   max-width: 540px;
+  position: relative;
+  z-index: 2;
 }
 
 .control-group {

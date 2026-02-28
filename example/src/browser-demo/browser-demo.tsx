@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { Position, scrollIntoArea } from "scroll-into-area";
 import "./browser-demo.css";
 
@@ -7,11 +7,43 @@ const POSITIONS: Position[] = ["start", "center", "end", "nearest"];
 const easeOutCubic = (x: number): number => 1 - Math.pow(1 - x, 3);
 
 export const BrowserDemo = () => {
+  const demoRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const targetRef = useRef<HTMLDivElement>(null);
+  const ghostRef = useRef<HTMLDivElement>(null);
   const [posX, setPosX] = useState<Position>("center");
   const [posY, setPosY] = useState<Position>("center");
   const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const target = targetRef.current;
+    const ghost = ghostRef.current;
+    const demo = demoRef.current;
+    if (!viewport || !target || !ghost || !demo) return;
+
+    const update = () => {
+      const vRect = viewport.getBoundingClientRect();
+      const tRect = target.getBoundingClientRect();
+      const dRect = demo.getBoundingClientRect();
+
+      const isFullyVisible =
+        tRect.left >= vRect.left &&
+        tRect.right <= vRect.right &&
+        tRect.top >= vRect.top &&
+        tRect.bottom <= vRect.bottom;
+
+      ghost.style.left = `${tRect.left - dRect.left}px`;
+      ghost.style.top = `${tRect.top - dRect.top}px`;
+      ghost.style.width = `${tRect.width}px`;
+      ghost.style.height = `${tRect.height}px`;
+      ghost.style.opacity = isFullyVisible ? "0" : "1";
+    };
+
+    viewport.addEventListener("scroll", update);
+    update();
+    return () => viewport.removeEventListener("scroll", update);
+  }, []);
 
   const scrollToPosition = useCallback(async (x: Position, y: Position) => {
     if (!viewportRef.current || !targetRef.current) return;
@@ -52,7 +84,12 @@ export const BrowserDemo = () => {
   }, [posX, posY, scrollToPosition]);
 
   return (
-    <div className="browser-demo">
+    <div className="browser-demo" ref={demoRef}>
+      <div className="target-ghost" ref={ghostRef}>
+        <span className="target-icon">◎</span>
+        <span className="target-label">Target</span>
+      </div>
+
       <div className="browser-window">
         <div className="browser-titlebar">
           <div className="browser-dots">
