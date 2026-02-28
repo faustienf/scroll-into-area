@@ -2,12 +2,9 @@ import { Cat } from "./cat";
 import { GhLink } from "./gh-link";
 import { BrowserDemo } from "./browser-demo";
 import { CodeSection } from "./code-section";
-import { useEasterEgg } from "./hooks/use-easter-egg";
 import "./app.css";
 
 export const App = () => {
-  const { showCat, toggleCat } = useEasterEgg();
-
   return (
     <div className="app">
       <GhLink
@@ -16,7 +13,7 @@ export const App = () => {
       />
 
       <header className="app-header">
-        <h1 className="app-title" onDoubleClick={toggleCat}>
+        <h1 className="app-title">
           <code>scroll-into-area</code>
         </h1>
         <p className="app-subtitle">
@@ -30,7 +27,7 @@ export const App = () => {
 
       <CodeSection />
 
-      <section className={`cat-section ${showCat ? "visible" : ""}`}>
+      <section className="cat-section visible">
         <div className="cat-card">
           <span className="cat-card-label">Easter egg 🐱</span>
           <Cat />
