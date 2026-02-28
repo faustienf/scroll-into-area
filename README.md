@@ -1,12 +1,23 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/faustienf/scroll-into-area/main/assets/cat.png" width="200">
-</p>
-
 # scroll-into-area
 
-[![npm-version](https://img.shields.io/npm/v/scroll-into-area.svg)](https://npmjs.org/package/scroll-into-area)
+[![npm version](https://img.shields.io/npm/v/scroll-into-area.svg)](https://npmjs.org/package/scroll-into-area)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/scroll-into-area)](https://bundlephobia.com/package/scroll-into-area)
+[![license](https://img.shields.io/npm/l/scroll-into-area.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-ready-blue.svg)](https://www.typescriptlang.org)
 
-♿️ Smooth scrolling an element into view. [Demo](https://scroll-into-area.vercel.app).
+Smooth scrolling an element into a specific position within a scrollable container, with custom easing, abort support, and promise-based completion tracking.
+
+[Demo](https://scroll-into-area.vercel.app)
+
+## Highlights
+
+- **Lightweight** — built on top of [easing-scroll](https://github.com/faustienf/easing-scroll)
+- **TypeScript-first** — written in TypeScript, ships type declarations
+- **Dual package** — ESM and CJS builds
+- **Positioning** — align to `start`, `center`, or `end` on both axes
+- **Customizable** — bring your own [easing function](https://easings.net)
+- **Cancellable** — abort with [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal)
+- **Promise-based** — `await` completion or track partial progress
 
 ## Install
 
@@ -14,89 +25,135 @@
 npm install scroll-into-area
 ```
 
-## Features
+```sh
+pnpm add scroll-into-area
+```
 
-- 📈 Customize [easing function](https://easings.net)
-- 🚫 Abort scrolling ([AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal))
-- 🔄 Waiting for animation to end
-
-## Usage
+## Quick Start
 
 ```ts
 import { scrollIntoArea } from "scroll-into-area";
 
-const controller = new AbortController();
-// Abort scrolling
-// controller.abort(); ❌
-
 const container = document.querySelector("ul");
 const target = container.querySelector("li");
 
-const progress = await scrollIntoArea(target, {
+await scrollIntoArea(target, {
   container,
-  x: "end", // start, center, end
-  y: "start", // start, center, end
-  duration: 400, // ms
-  signal: controller.signal,
-  // 👀 https://easings.net/#easeOutCubic
-  easing: (x) => 1 - Math.pow(1 - x, 3),
+  y: "center",
+  duration: 400,
+  easing: (x) => 1 - Math.pow(1 - x, 3), // easeOutCubic
 });
-
-if (progress === 1) {
-  console.log("Completed");
-} else {
-  console.log("Aborted");
-}
 ```
 
-### Animation
+## API
 
-Linear function `(t) => t` is used by default. Pass [easing](https://easings.net), if you want to change easing function.
-`duration` is animation duration in milliseconds.
+### `scrollIntoArea(target, options): Promise<number>`
+
+Smoothly scrolls `target` into a specific position within the scrollable `container`.
+
+#### `target`
+
+Type: `Element`
+
+The DOM element to scroll into view.
+
+#### `options`
+
+| Option      | Type                    | Default    | Description                                                                  |
+| ----------- | ----------------------- | ---------- | ---------------------------------------------------------------------------- |
+| `container` | `HTMLElement`           | —          | The scrollable container element (**required**)                              |
+| `x`         | `Position`              | —          | Horizontal alignment: `"start"`, `"center"`, or `"end"`                      |
+| `y`         | `Position`              | —          | Vertical alignment: `"start"`, `"center"`, or `"end"`                        |
+| `duration`  | `number`                | `0`        | Animation duration in milliseconds                                           |
+| `easing`    | `(t: number) => number` | `(t) => t` | [Easing function](https://easings.net) mapping progress (0–1) to eased value |
+| `signal`    | `AbortSignal`           | —          | Signal to cancel the animation                                               |
+
+#### Return value
+
+Resolves with a `number` between `0` and `1` representing animation progress:
+
+| Value       | Meaning                                              |
+| ----------- | ---------------------------------------------------- |
+| `1`         | Animation completed fully                            |
+| `0 < x < 1` | Animation was aborted at _x_ progress                |
+| `0`         | Animation never started (signal was already aborted) |
+
+### Behavior
+
+- **Instant scroll** — when `duration` is `0` or omitted, the element scrolls instantly and resolves `1`.
+- **No-op** — when both `x` and `y` are omitted, resolves `1` immediately.
+- **Already-aborted signal** — resolves `0` without scrolling.
+
+## Examples
+
+### Custom Easing
+
+The default easing is linear `(t) => t`. Pass any function from [easings.net](https://easings.net):
 
 ```ts
-scrollIntoArea(target, {
-  duration: 400, // ms
-  // 👀 https://easings.net/#easeOutCubic
+await scrollIntoArea(target, {
+  container,
+  y: "start",
+  duration: 600,
+  // https://easings.net/#easeOutCubic
   easing: (x) => 1 - Math.pow(1 - x, 3),
 });
 ```
 
-### Abort scrolling
+### Abort Scrolling
 
-Pass `signal` ([AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal)),
-if you want to abort scrolling.
+Use an `AbortController` to cancel an in-flight animation:
 
 ```ts
 const controller = new AbortController();
-setTimeout(() => {
-  controller.abort();
-}, 100);
+
+setTimeout(() => controller.abort(), 100);
 
 const progress = await scrollIntoArea(target, {
-  ...,
+  container,
+  y: "center",
+  duration: 400,
   signal: controller.signal,
 });
 
-if (progress !== 1) {
-  console.log('Scrolling has been aborted.');
+if (progress < 1) {
+  console.log(`Aborted at ${Math.round(progress * 100)}%`);
 }
 ```
 
-`progress` is a number from _0_ to _1_.
+### React Usage
 
-`1` - Scrolling is completed _100%_.
+A reusable hook that scrolls an element into view and cancels on unmount:
 
-`<1` - Scrolling has been aborted and completed _x%_.
+```tsx
+import { useEffect, useRef } from "react";
+import { scrollIntoArea } from "scroll-into-area";
 
-```ts
-const progress = await scrollIntoArea(target, {
-  ...,
-});
+function useScrollIntoArea(
+  containerRef: React.RefObject<HTMLElement | null>,
+  targetRef: React.RefObject<Element | null>,
+  y: "start" | "center" | "end",
+) {
+  useEffect(() => {
+    const container = containerRef.current;
+    const target = targetRef.current;
+    if (!container || !target) return;
 
-if (progress !== 1) {
-  console.log('Scrolling has been aborted.');
-} else {
-  console.log('Completed.');
+    const controller = new AbortController();
+
+    scrollIntoArea(target, {
+      container,
+      y,
+      duration: 400,
+      signal: controller.signal,
+      easing: (x) => 1 - Math.pow(1 - x, 3),
+    });
+
+    return () => controller.abort();
+  }, [y]);
 }
 ```
+
+## License
+
+[MIT](LICENSE)

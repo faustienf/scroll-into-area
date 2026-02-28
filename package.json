@@ -13,28 +13,29 @@
     "easing"
   ],
   "type": "module",
-  "source": "src/index.ts",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/scroll-into-area.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.mjs"
-    },
-    "./scroll-into-area": {
-      "require": "./dist/scroll-into-area.js",
-      "import": "./dist/scroll-into-area.mjs",
-      "default": "./dist/scroll-into-area.mjs"
+      "types": "./dist/scroll-into-area.d.ts",
+      "require": {
+        "types": "./dist/scroll-into-area.d.cts",
+        "default": "./dist/scroll-into-area.cjs"
+      },
+      "import": "./dist/scroll-into-area.js"
     }
   },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
   "scripts": {
-    "clean": "rm -r dist/*",
-    "build": "tsc && pnpm run clean && rollup -c",
+    "test": "vitest run",
+    "check-types": "tsc",
+    "build": "tsup src/scroll-into-area.ts --format cjs,esm --dts --minify --clean",
     "release:patch": "pnpm version patch",
-    "preversion": "pnpm run build",
-    "postversion": "git add . && git push && git push --tags && pnpm publish"
+    "preversion": "pnpm run check-types && pnpm run build",
+    "postversion": "git add . && git push && git push --tags && pnpm publish",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -47,14 +48,15 @@
   },
   "homepage": "https://github.com/faustienf/scroll-into-area#readme",
   "dependencies": {
-    "easing-scroll": "^1.0.3"
+    "easing-scroll": "^1.0.4"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "15.0.1",
-    "esbuild": "0.16.12",
-    "rollup": "3.9.1",
-    "rollup-plugin-esbuild": "5.0.0",
-    "rollup-plugin-typescript2": "0.34.1",
-    "typescript": "4.9.4"
+    "@vitest/coverage-v8": "^4.0.18",
+    "esbuild": "^0.27.3",
+    "husky": "^9.1.7",
+    "jsdom": "^28.1.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }

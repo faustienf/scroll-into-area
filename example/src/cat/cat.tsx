@@ -1,5 +1,5 @@
 import { useRef, useEffect, Fragment, PointerEvent } from "react";
-import { Position, scrollIntoArea } from "../../../src";
+import { Position, scrollIntoArea } from "scroll-into-area";
 
 import "./cat.css";
 
@@ -25,7 +25,7 @@ export const Cat = () => {
 
     const [x, y] = e.target.dataset.position?.split("-") as [
       Position,
-      Position
+      Position,
     ];
 
     scrollIntoArea(earsRef.current, {
@@ -84,7 +84,7 @@ export const Cat = () => {
           <li />
         </ul>
         <ul className="cat-head" ref={headRef}>
-          {Array.from({ length: 5 }, (item, index) => (
+          {Array.from({ length: 5 }, (_item, index) => (
             <Fragment key={String(index)}>
               <li />
               <li />
