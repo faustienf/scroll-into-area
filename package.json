@@ -50,7 +50,7 @@
   },
   "homepage": "https://github.com/faustienf/scroll-into-area#readme",
   "dependencies": {
-    "easing-scroll": "^1.0.4"
+    "easing-scroll": "^1.0.5"
   },
   "devDependencies": {
     "@vitejs/plugin-react-swc": "^4.2.3",

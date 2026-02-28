@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       easing-scroll:
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.5
+        version: 1.0.5
     devDependencies:
       '@vitejs/plugin-react-swc':
         specifier: ^4.2.3
@@ -623,8 +623,8 @@ packages:
   decimal.js@10.6.0:
     resolution: {integrity: sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg==}
 
-  easing-scroll@1.0.4:
-    resolution: {integrity: sha512-GDbfIcTLmtM8lO4PYn36ahdH0FoUpBeRxZ6rWIlyIzGRrmjLKhGRhvFOmhyeAgtAE+ygZeIQ6omHLLaDLwDvXA==}
+  easing-scroll@1.0.5:
+    resolution: {integrity: sha512-6R1mJsVkd44Bky1hZ2OfllM/ypncF5KCkACi8Ml/H1D1jB4lrCL1TrMLYtPa34DLf7A/r+Mc7mrEQbm5Yjldow==}
 
   entities@6.0.1:
     resolution: {integrity: sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==}
@@ -1467,7 +1467,7 @@ snapshots:
 
   decimal.js@10.6.0: {}
 
-  easing-scroll@1.0.4: {}
+  easing-scroll@1.0.5: {}
 
   entities@6.0.1: {}
 
