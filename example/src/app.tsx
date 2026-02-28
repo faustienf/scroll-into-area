@@ -24,18 +24,18 @@ export const App = () => {
         </p>
       </header>
 
+      <main>
+        <BrowserDemo />
+      </main>
+
+      <CodeSection />
+
       <section className={`cat-section ${showCat ? "visible" : ""}`}>
         <div className="cat-card">
           <span className="cat-card-label">Easter egg 🐱</span>
           <Cat />
         </div>
       </section>
-
-      <main>
-        <BrowserDemo />
-      </main>
-
-      <CodeSection />
     </div>
   );
 };

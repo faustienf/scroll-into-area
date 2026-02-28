@@ -12,6 +12,8 @@
 /* ── Header ── */
 .app-header {
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .app-title {
