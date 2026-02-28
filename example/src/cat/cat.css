@@ -1,7 +1,8 @@
 .cat-area {
   display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: repeat(3, 80px);
+  color: #4b3f72;
 }
 
 .cat {
@@ -120,5 +121,9 @@
   padding: 0;
   transition: opacity 0.1s ease-out;
   z-index: 9;
-  cursor: wait;
+}
+
+.position:hover {
+  background: rgba(139, 92, 246, 0.08);
+  border-radius: 8px;
 }
