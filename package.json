@@ -14,6 +14,8 @@
   ],
   "type": "module",
   "types": "dist/scroll-into-area.d.ts",
+  "main": "dist/scroll-into-area.cjs",
+  "module": "dist/scroll-into-area.js",
   "exports": {
     ".": {
       "types": "./dist/scroll-into-area.d.ts",

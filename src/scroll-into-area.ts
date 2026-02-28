@@ -16,7 +16,7 @@ type Pct = number;
 type Ms = number;
 
 /** Scroll alignment position within the container */
-export type Position = "start" | "end" | "center";
+export type Position = "start" | "end" | "center" | "nearest";
 
 type Options = {
   /** The scrollable container element */
@@ -41,6 +41,16 @@ type Options = {
    * When aborted, the promise resolves with the current progress (0–1).
    */
   signal?: AbortSignal;
+  /**
+   * Offset in pixels from the alignment edge.
+   * Creates inward space between the container edge and the target.
+   * For `"start"` and `"center"`, the target is pushed away from the start edge.
+   * For `"end"`, the target is pushed away from the end edge.
+   * For `"nearest"`, narrows the visible area used for visibility detection.
+   * Useful for accommodating sticky headers or footers.
+   * @default 0
+   */
+  offset?: Px;
 };
 
 type Properties = {
@@ -80,11 +90,52 @@ const getCenterScroll = ({
   return containerScroll + offset + targetSize / 2;
 };
 
+const getNearestScroll = (props: Properties, offset: Px): Px => {
+  const {
+    containerOffset,
+    containerSize,
+    targetOffset,
+    targetSize,
+    containerScroll,
+  } = props;
+
+  const targetRelStart = targetOffset - containerOffset;
+  const targetRelEnd = targetRelStart + targetSize;
+
+  const visibleStart = offset;
+  const visibleEnd = containerSize - offset;
+
+  // Target is fully within the visible (offset-adjusted) area
+  if (targetRelStart >= visibleStart && targetRelEnd <= visibleEnd) {
+    return containerScroll;
+  }
+
+  // Target is larger than visible area, or overflows at the start
+  if (targetSize > visibleEnd - visibleStart || targetRelStart < visibleStart) {
+    return getStartScroll(props) - offset;
+  }
+
+  // Target overflows at the end
+  return getEndScroll(props) + offset;
+};
+
 const positionScroll = {
   start: getStartScroll,
   center: getCenterScroll,
   end: getEndScroll,
 } as const;
+
+const resolveScroll = (
+  position: Position,
+  props: Properties,
+  offset: Px,
+): Px => {
+  if (position === "nearest") {
+    return getNearestScroll(props, offset);
+  }
+  const base = positionScroll[position](props);
+  return position === "end" ? base + offset : base - offset;
+};
 
 /**
  * Smoothly scroll a target element into a specific position within a scrollable container.
@@ -109,32 +160,40 @@ const positionScroll = {
  * });
  * ```
  */
-export const scrollIntoArea = <E extends Element>(
-  target: E,
-  { container, x, y, ...rest }: Options,
+export const scrollIntoArea = (
+  target: Element,
+  { container, x, y, offset = 0, ...rest }: Options,
 ): Promise<Pct> => {
   const containerRect = container.getBoundingClientRect();
   const targetRect = target.getBoundingClientRect();
 
-  const top =
-    y &&
-    positionScroll[y]({
-      containerOffset: containerRect.top,
-      containerScroll: container.scrollTop,
-      containerSize: containerRect.height,
-      targetOffset: targetRect.top,
-      targetSize: targetRect.height,
-    });
+  const top = y
+    ? resolveScroll(
+        y,
+        {
+          containerOffset: containerRect.top,
+          containerScroll: container.scrollTop,
+          containerSize: containerRect.height,
+          targetOffset: targetRect.top,
+          targetSize: targetRect.height,
+        },
+        offset,
+      )
+    : undefined;
 
-  const left =
-    x &&
-    positionScroll[x]({
-      containerOffset: containerRect.left,
-      containerScroll: container.scrollLeft,
-      containerSize: containerRect.width,
-      targetOffset: targetRect.left,
-      targetSize: targetRect.width,
-    });
+  const left = x
+    ? resolveScroll(
+        x,
+        {
+          containerOffset: containerRect.left,
+          containerScroll: container.scrollLeft,
+          containerSize: containerRect.width,
+          targetOffset: targetRect.left,
+          targetSize: targetRect.width,
+        },
+        offset,
+      )
+    : undefined;
 
   return easingScroll(container, { top, left, ...rest });
 };

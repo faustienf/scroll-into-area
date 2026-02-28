@@ -14,7 +14,8 @@ Smooth scrolling an element into a specific position within a scrollable contain
 - **Lightweight** — built on top of [easing-scroll](https://github.com/faustienf/easing-scroll)
 - **TypeScript-first** — written in TypeScript, ships type declarations
 - **Dual package** — ESM and CJS builds
-- **Positioning** — align to `start`, `center`, or `end` on both axes
+- **Positioning** — align to `start`, `center`, `end`, or `nearest` on both axes
+- **Offset** — compensate for sticky headers/footers with the `offset` option
 - **Customizable** — bring your own [easing function](https://easings.net)
 - **Cancellable** — abort with [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal)
 - **Promise-based** — `await` completion or track partial progress
@@ -62,11 +63,12 @@ The DOM element to scroll into view.
 | Option      | Type                    | Default    | Description                                                                  |
 | ----------- | ----------------------- | ---------- | ---------------------------------------------------------------------------- |
 | `container` | `HTMLElement`           | —          | The scrollable container element (**required**)                              |
-| `x`         | `Position`              | —          | Horizontal alignment: `"start"`, `"center"`, or `"end"`                      |
-| `y`         | `Position`              | —          | Vertical alignment: `"start"`, `"center"`, or `"end"`                        |
+| `x`         | `Position`              | —          | Horizontal alignment: `"start"`, `"center"`, `"end"`, or `"nearest"`         |
+| `y`         | `Position`              | —          | Vertical alignment: `"start"`, `"center"`, `"end"`, or `"nearest"`           |
 | `duration`  | `number`                | `0`        | Animation duration in milliseconds                                           |
 | `easing`    | `(t: number) => number` | `(t) => t` | [Easing function](https://easings.net) mapping progress (0–1) to eased value |
 | `signal`    | `AbortSignal`           | —          | Signal to cancel the animation                                               |
+| `offset`    | `number`                | `0`        | Offset in pixels from the alignment edge (useful for sticky headers/footers) |
 
 #### Return value
 
@@ -83,6 +85,8 @@ Resolves with a `number` between `0` and `1` representing animation progress:
 - **Instant scroll** — when `duration` is `0` or omitted, the element scrolls instantly and resolves `1`.
 - **No-op** — when both `x` and `y` are omitted, resolves `1` immediately.
 - **Already-aborted signal** — resolves `0` without scrolling.
+- **Nearest** — `"nearest"` only scrolls when the target is outside the visible area. If the target is larger than the container, it aligns to `start`.
+- **Offset** — creates inward space from the alignment edge. For `"start"` and `"center"`, the target is pushed away from the start edge. For `"end"`, the target is pushed away from the end edge. For `"nearest"`, narrows the visible area used for detection.
 
 ## Examples
 
@@ -127,12 +131,12 @@ A reusable hook that scrolls an element into view and cancels on unmount:
 
 ```tsx
 import { useEffect, useRef } from "react";
-import { scrollIntoArea } from "scroll-into-area";
+import { scrollIntoArea, type Position } from "scroll-into-area";
 
 function useScrollIntoArea(
   containerRef: React.RefObject<HTMLElement | null>,
   targetRef: React.RefObject<Element | null>,
-  y: "start" | "center" | "end",
+  y: Position,
 ) {
   useEffect(() => {
     const container = containerRef.current;
@@ -152,6 +156,15 @@ function useScrollIntoArea(
     return () => controller.abort();
   }, [y]);
 }
+```
+
+### Types
+
+The library exports the `Position` type for use in your own abstractions:
+
+```ts
+import { type Position } from "scroll-into-area";
+// Position = "start" | "end" | "center" | "nearest"
 ```
 
 ## License
