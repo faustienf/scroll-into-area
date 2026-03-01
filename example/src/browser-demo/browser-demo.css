@@ -5,12 +5,12 @@
   align-items: center;
   gap: 24px;
   width: 100%;
-  max-width: 560px;
+  max-width: var(--content-width);
   position: relative;
 }
 
 .browser-window {
-  width: clamp(280px, 85vw, 540px);
+  width: clamp(280px, 85vw, var(--content-width));
   background: var(--glass-bg);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
