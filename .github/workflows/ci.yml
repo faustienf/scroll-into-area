@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       # engines allows Node >= 18, but the toolchain itself does not run there:
       # tsdown requires ^22.18.0 || >=24.11.0 and jsdom requires ^22.22.2 ||
