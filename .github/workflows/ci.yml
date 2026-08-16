@@ -1,0 +1,60 @@
+name: CI
+
+# Until this existed, nothing was verified before a merge: the checks lived only
+# in the git hooks (skippable with --no-verify) and in the release workflow,
+# which runs when the version has already been tagged.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+# Pushing again to a branch makes the run for the previous push pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The git hooks exist for developer machines; every check they run is a step
+  # below. Without this, `pnpm install` would set husky up on the runner.
+  HUSKY: 0
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      # engines allows Node >= 18, but the toolchain itself does not run there:
+      # tsdown requires ^22.18.0 || >=24.11.0 and jsdom requires ^22.22.2 ||
+      # ^24.15.0 || >=26.0.0. 22 is the floor those leave, and the version
+      # release.yml publishes from, so it is the one worth checking here.
+      #
+      # A second version would only exercise the toolchain again: the published
+      # bundle is browser code with no Node API in it, and the suite runs in
+      # jsdom, so nothing in either varies by Node version.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run format:check
+
+      - run: pnpm run check-types
+
+      - run: pnpm run test:coverage
+
+      # Also validates the publishable package: the build runs publint and
+      # are-the-types-wrong.
+      - run: pnpm run build
+
+      # The example consumes the built package the way a published consumer
+      # does, so this catches exports and type-resolution breakage.
+      - run: pnpm --filter example run check-types

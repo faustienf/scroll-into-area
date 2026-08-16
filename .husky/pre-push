@@ -1,0 +1,9 @@
+# The slower half of the checks, moved off pre-commit now that CI runs them on
+# every pull request. Committing stays quick; nothing reaches the remote without
+# the publishable package being validated.
+
+# Validates the publishable package — the build runs publint and
+# are-the-types-wrong.
+pnpm run build
+
+pnpm --filter example run check-types

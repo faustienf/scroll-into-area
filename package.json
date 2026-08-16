@@ -13,54 +13,71 @@
     "easing"
   ],
   "type": "module",
-  "types": "dist/scroll-into-area.d.ts",
-  "main": "dist/scroll-into-area.cjs",
-  "module": "dist/scroll-into-area.js",
+  "types": "./dist/scroll-into-area.d.ts",
+  "main": "./dist/scroll-into-area.cjs",
+  "module": "./dist/scroll-into-area.js",
   "exports": {
     ".": {
-      "types": "./dist/scroll-into-area.d.ts",
+      "import": {
+        "types": "./dist/scroll-into-area.d.ts",
+        "default": "./dist/scroll-into-area.js"
+      },
       "require": {
         "types": "./dist/scroll-into-area.d.cts",
         "default": "./dist/scroll-into-area.cjs"
       },
-      "import": "./dist/scroll-into-area.js"
-    }
+      "default": "./dist/scroll-into-area.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "check-types": "tsc",
-    "build": "tsup src/scroll-into-area.ts --format cjs,esm --dts --minify --clean",
-    "release:patch": "pnpm version patch",
-    "preversion": "pnpm run check-types && pnpm run build",
-    "postversion": "git add . && git push && git push --tags && pnpm publish",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "build": "tsdown",
+    "release:patch": "npm version patch",
+    "release:minor": "npm version minor",
+    "release:major": "npm version major",
+    "preversion": "npm run check-types && npm test && npm run build",
+    "prepack": "npm run build",
+    "prepublishOnly": "node -e \"if (!process.env.CI) { console.error('\\nRefusing to publish from a local machine. Publishing is done by .github/workflows/release.yml on tag push: run npm run release:patch|minor|major and let CI publish the tag.\\n'); process.exit(1) }\"",
+    "postversion": "git push --follow-tags",
     "prepare": "husky"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/faustienf/scroll-into-area.git"
   },
-  "author": "@faustien",
+  "author": "@faustienf",
   "license": "MIT",
+  "packageManager": "pnpm@11.21.0",
   "bugs": {
     "url": "https://github.com/faustienf/scroll-into-area/issues"
   },
   "homepage": "https://github.com/faustienf/scroll-into-area#readme",
   "dependencies": {
-    "easing-scroll": "^1.0.5"
+    "easing-scroll": "^1.2.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react-swc": "^4.2.3",
-    "@vitest/coverage-v8": "^4.0.18",
-    "esbuild": "^0.27.3",
+    "@arethetypeswrong/core": "^0.18.5",
+    "@vitest/coverage-v8": "^4.1.10",
+    "esbuild": "^0.28.2",
     "husky": "^9.1.7",
-    "jsdom": "^28.1.0",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.1",
-    "vitest": "^4.0.18"
+    "jsdom": "^30.0.1",
+    "prettier": "^3.9.6",
+    "publint": "^0.3.23",
+    "tsdown": "^0.22.14",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   }
 }
