@@ -45,7 +45,7 @@ jobs:
       # such package" rather than "not authenticated". Leaving it out means an
       # auth problem can only surface as an auth problem. registry.npmjs.org is
       # the default registry anyway.
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
