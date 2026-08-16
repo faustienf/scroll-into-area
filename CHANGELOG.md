@@ -113,8 +113,8 @@ approximating it. Two things need attention when upgrading, both detailed below:
 - Publishing moved to GitHub Actions on tag push, authenticated with npm trusted
   publishing over OIDC, so releases carry a provenance statement. `npm version`
   no longer publishes from a developer machine, and `prepublishOnly` refuses to.
-- CI runs type checks, the test suite and the package validation on every pull
-  request, across Node 22 and 24.
+- CI runs formatting, type checks, the test suite and the package validation on
+  every pull request.
 - Test coverage is measured with a 100% threshold on statements, branches,
   functions and lines.
 - Dependabot keeps GitHub Actions and the toolchain current, with

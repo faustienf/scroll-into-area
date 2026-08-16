@@ -25,26 +25,22 @@ jobs:
     permissions:
       contents: read
 
-    strategy:
-      fail-fast: false
-      matrix:
-        # engines allows Node >= 18, but the toolchain itself does not run
-        # there: tsdown requires ^22.18.0 || >=24.11.0 and jsdom requires
-        # ^22.22.2 || ^24.15.0 || >=26.0.0. The published bundle is browser
-        # code with no Node API in it, so what 18 has to support is importing
-        # it, which this suite would not exercise anyway.
-        node: [22, 24]
-
-    name: node ${{ matrix.node }}
-
     steps:
       - uses: actions/checkout@v5
 
       - uses: pnpm/action-setup@v4
 
+      # engines allows Node >= 18, but the toolchain itself does not run there:
+      # tsdown requires ^22.18.0 || >=24.11.0 and jsdom requires ^22.22.2 ||
+      # ^24.15.0 || >=26.0.0. 22 is the floor those leave, and the version
+      # release.yml publishes from, so it is the one worth checking here.
+      #
+      # A second version would only exercise the toolchain again: the published
+      # bundle is browser code with no Node API in it, and the suite runs in
+      # jsdom, so nothing in either varies by Node version.
       - uses: actions/setup-node@v5
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 22
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
