@@ -1,0 +1,30 @@
+version: 2
+
+updates:
+  # Action majors go stale silently — nothing fails when actions/checkout@v5 is
+  # two majors behind, it just quietly runs on an older runner image.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "ci"
+
+  - package-ecosystem: npm
+    directories:
+      - /
+      - /example
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "chore"
+    # The toolchain moves together and none of it ships, so one grouped PR a
+    # month is enough. `easing-scroll` is the one runtime dependency and is kept
+    # out of the group: a bump to it changes what users install, so it deserves
+    # its own pull request.
+    groups:
+      dev-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "easing-scroll"

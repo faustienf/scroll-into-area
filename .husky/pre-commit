@@ -1,2 +1,3 @@
+pnpm run format:check
 pnpm run check-types
-(cd example && pnpm run check-types)
+pnpm test

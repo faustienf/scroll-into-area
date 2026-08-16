@@ -1,0 +1,83 @@
+name: Release
+
+# Publishing happens here, not on a developer machine: `npm version` only pushes
+# the commit and the tag, and this workflow publishes the tag it sees. A failed
+# publish can be re-run from the Actions UI without bumping the version again.
+on:
+  push:
+    tags:
+      - "v*"
+  # A manual run is always a rehearsal: same steps, but it stops at the assembled
+  # tarball, so the pipeline can be checked without spending a version number.
+  # It proves nothing about auth — the OIDC exchange only happens on a real
+  # publish. `npm publish --dry-run` is deliberately not used here: it queries the
+  # registry for existing versions, so it always fails on an already-published
+  # version, which is exactly the state a rehearsal runs in.
+  workflow_dispatch:
+
+env:
+  # The git hooks exist for developer machines; the checks they run are steps
+  # below. Without this, `pnpm install` would set husky up on the runner.
+  HUSKY: 0
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Required for npm Trusted Publishing: npm exchanges this OIDC token for a
+      # short-lived publish credential, so there is no NPM_TOKEN to rotate.
+      # One-time setup on npmjs.com: package -> Settings -> Trusted Publisher ->
+      # GitHub Actions, repository faustienf/scroll-into-area, workflow release.yml.
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      # Deliberately no `registry-url`: it makes setup-node write an .npmrc with
+      # `_authToken=${NODE_AUTH_TOKEN}` and export NODE_AUTH_TOKEN as the literal
+      # placeholder XXXXX-XXXXX-XXXXX-XXXXX. Publishing works either way — npm
+      # prefers the OIDC exchange whenever the package has a trusted publisher —
+      # but that placeholder is a credential to fall back on when the exchange
+      # does not happen, and the registry then answers 404, which reads as "no
+      # such package" rather than "not authenticated". Leaving it out means an
+      # auth problem can only surface as an auth problem. registry.npmjs.org is
+      # the default registry anyway.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # Trusted Publishing needs npm >= 11.5.1, which is newer than the npm
+      # bundled with Node 22.
+      - run: npm install --global npm@latest
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Check that the tag matches package.json
+        if: github.event_name == 'push'
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$pkg" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $pkg" >&2
+            exit 1
+          fi
+
+      - run: pnpm run check-types
+
+      - run: pnpm test
+
+      # Also validates the publishable package: the build runs publint and
+      # are-the-types-wrong. `npm publish` rebuilds via prepack.
+      - run: pnpm run build
+
+      - name: Publish to npm
+        if: github.event_name == 'push'
+        run: npm publish
+
+      - name: Rehearsal — assemble the tarball, stop before publishing
+        if: github.event_name == 'workflow_dispatch'
+        run: npm pack --dry-run

@@ -1,3 +1,14 @@
 packages:
   - "."
   - "example"
+
+# pnpm 10+ blocks dependency lifecycle scripts unless they are listed here.
+# All of these ship their platform binaries as optional dependencies, so their
+# install scripts are not needed — builds and tests pass without them.
+allowBuilds:
+  "@swc/core": false
+  es5-ext: false
+  esbuild: false
+
+minimumReleaseAgeExclude:
+  - easing-scroll@1.2.1
