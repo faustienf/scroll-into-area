@@ -34,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       # Deliberately no `registry-url`: it makes setup-node write an .npmrc with
       # `_authToken=${NODE_AUTH_TOKEN}` and export NODE_AUTH_TOKEN as the literal
